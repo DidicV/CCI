@@ -1,0 +1,20 @@
+﻿@page "/createstudent"
+
+<h3>Create Stundet</h3>
+
+<EditForm Model="Student" OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+
+    <div class="input_width">
+        <div style="margin-bottom: 1rem;">
+            <label>Name</label>
+            <InputText @bind-Value="Student.Name" class="form-control"></InputText>
+            <ValidationMessage For="@(() => Student.Name)" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="GoBack">Go back</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+    <br />
+</EditForm>

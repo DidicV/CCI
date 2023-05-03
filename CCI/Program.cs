@@ -1,4 +1,6 @@
 using CCI.Data;
+using CCI.Services.Implementations;
+using CCI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+// Add Services
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 var app = builder.Build();
 

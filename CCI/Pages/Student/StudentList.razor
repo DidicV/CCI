@@ -1,0 +1,12 @@
+﻿@page "/studentlist"
+<h3>StudentList</h3>
+<h1>@Students.Count</h1>
+@code 
+{
+    List<Student> Students = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Students = await StudentService.GetStudents();
+    }
+}

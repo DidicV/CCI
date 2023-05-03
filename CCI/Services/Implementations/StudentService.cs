@@ -1,28 +1,24 @@
 ﻿using CCI.Data;
 using CCI.Model;
-using Microsoft.AspNetCore.Mvc;
+using CCI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CCI.Controller
+namespace CCI.Services.Implementations
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StudentController : ControllerBase
+    public class StudentService : IStudentService
     {
         private readonly ApplicationDbContext _context;
 
-        public StudentController(ApplicationDbContext context)
+        public StudentService(ApplicationDbContext context)
         {
-            _context = context;
+            _context= context;
         }
 
-        [HttpGet]
         public async Task<List<Student>> GetStudents()
         {
             return await _context.Students.ToListAsync();
         }
 
-        [HttpPost]
         public async Task CreateStudent(Student student)
         {
             student.Id = Guid.NewGuid();
