@@ -24,7 +24,23 @@ namespace CCI.Services.Implementations
             student.Id = Guid.NewGuid();
 
             await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task<Student?> GetStudentById(Guid id)
+        {
+            return await _context.Students.FindAsync(id);
+        }
+
+        public async Task UpdateStudent(Student student)
+        {
+            _context.Update(student);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteStudent(Student student)
+        {
+            _context.Remove(student);
             await _context.SaveChangesAsync();
         }
     }

@@ -9,11 +9,12 @@ namespace CCI.Pages.Student
         async Task HandleSubmit()
         {
             await StudentService.CreateStudent(Student);
+            GoBack();
         }
 
         void GoBack()
         {
-            NavigationManager.NavigateTo("notes/list");
+            NavigationManager.NavigateTo("/studentlist");
         }
     }
 }

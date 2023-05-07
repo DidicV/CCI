@@ -7,5 +7,11 @@ namespace CCI.Services.Interfaces
         Task<List<Student>> GetStudents();
 
         Task CreateStudent(Student student);
+
+        Task<Student?> GetStudentById(Guid id);
+
+        Task UpdateStudent(Student student);
+
+        Task DeleteStudent(Student student);
     }
 }
