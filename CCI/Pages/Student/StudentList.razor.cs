@@ -8,5 +8,18 @@
         {
             Students = await StudentService.GetStudents();
         }
+
+        public void UpdateStudent(Guid id)
+        {
+            NavigationManager.NavigateTo($"updatestudent/{id}");
+        }
+
+        public async void DeleteStudent(Model.Student student) 
+        {
+            await StudentService.DeleteStudent(student);
+            Students = await StudentService.GetStudents();
+            Students = Students.Where(x => x.Id != student.Id).ToList();
+            StateHasChanged();
+        }
     }
 }

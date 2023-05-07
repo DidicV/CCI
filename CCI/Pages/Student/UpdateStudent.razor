@@ -20,7 +20,7 @@
                 <ValidationMessage For="@(() => Student.Name)" />
             </div>
 
-            <button class="btn btn-primary" @onclick="GoBack">Go back</button>
+            <a href="studentlist"><button class="btn btn-primary">Go Back</button></a>
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
         <br/>
@@ -40,7 +40,7 @@
         }
         catch
         {
-            GoBack();
+
         }
     }
 
@@ -50,10 +50,5 @@
         {
             await StudentService.UpdateStudent(Student);
         }
-    }
-
-    void GoBack()
-    {
-        NavigationManager.NavigateTo("/studentlist");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CCI.Data;
 using CCI.Model;
 using CCI.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
 namespace CCI.Services.Implementations
@@ -8,10 +9,12 @@ namespace CCI.Services.Implementations
     public class StudentService : IStudentService
     {
         private readonly ApplicationDbContext _context;
+        private readonly NavigationManager _navigationManager;
 
-        public StudentService(ApplicationDbContext context)
+        public StudentService(ApplicationDbContext context, NavigationManager navigationManager)
         {
             _context= context;
+            _navigationManager = navigationManager;
         }
 
         public async Task<List<Student>> GetStudents()
@@ -25,6 +28,8 @@ namespace CCI.Services.Implementations
 
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
+
+            _navigationManager.NavigateTo("studentlist");
         }
 
         public async Task<Student?> GetStudentById(Guid id)
@@ -36,6 +41,8 @@ namespace CCI.Services.Implementations
         {
             _context.Update(student);
             await _context.SaveChangesAsync();
+
+            _navigationManager.NavigateTo("studentlist");
         }
 
         public async Task DeleteStudent(Student student)

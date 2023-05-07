@@ -1,8 +1,34 @@
 ﻿@page "/studentlist"
 <h3>StudentList</h3>
-<h1>@Students.Count</h1>
+<RadzenDataGrid
+        Data="@Students" 
+            TItem="Student" 
+            AllowFiltering="true"
+                    PageSize="6" 
+                        AllowPaging="true" 
+                            AllowSorting="true"
+                                PagerHorizontalAlign="HorizontalAlign.Left">
 
-@foreach(var student in Students)
-{
-    <h1>@student.Name</h1>
-}
+        <Columns>
+
+            <RadzenDataGridColumn TItem="Student" Title="Nr." Width="60px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="student">@(Students.IndexOf(student) + 1).</Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Student" Property="Name" Title="Name"></RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn TItem="Student" Title="Update" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="student">
+                <button class="btn btn-primary" @onclick="(() => UpdateStudent(student.Id))"><i class="oi oi-pencil"></i></button>
+                </Template>
+             </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Student" Title="asdasd" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="student">
+                <button class="btn btn-danger" @onclick="(() => DeleteStudent(student))"><i class="oi oi-trash"></i></button>
+                </Template>
+            </RadzenDataGridColumn>
+
+        </Columns>
+</RadzenDataGrid>
