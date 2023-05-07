@@ -6,4 +6,17 @@
 
 Welcome to your new app.
 
+<div id="chartdiv" style="width:600px;height:250px;"></div>
+
 <SurveyPrompt Title="How is Blazor working for you?" />
+@code
+{
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JsRunTime.InvokeVoidAsync("GeneratePieChart");
+        }
+    }
+}
