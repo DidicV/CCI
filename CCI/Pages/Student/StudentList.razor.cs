@@ -8,6 +8,10 @@
         {
             Students = await StudentService.GetStudents();
         }
+        void CreateStudent()
+        {
+            NavigationManager.NavigateTo("createstudent");
+        }
 
         public void UpdateStudent(Guid id)
         {
