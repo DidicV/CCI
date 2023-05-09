@@ -19,6 +19,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 // Add Services
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IDisciplineService, DisciplineService>();
 
 // Radzen
 builder.Services.AddScoped<DialogService>();

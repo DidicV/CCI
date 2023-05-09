@@ -1,0 +1,55 @@
+﻿@page "/updatediscipline/{id:guid}"
+
+<h3>Update Discipline</h3>
+
+@if (Discipline != null)
+{
+
+    <EditForm Model="Discipline" OnValidSubmit="HandleSubmit">
+
+        <DataAnnotationsValidator />
+
+        <div class="input_width">
+            <div style="margin-bottom: 1rem;">
+                <label>Discipline</label>
+
+                <div style="display: flex;">
+                    <InputText @bind-Value="Discipline.Name" class="form-control"></InputText>
+                </div>
+
+                <ValidationMessage For="@(() => Discipline.Name)" />
+            </div>
+
+            <a href="disciplinelist"><button class="btn btn-primary">Go Back</button></a>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+        <br />
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public Discipline? Discipline { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Discipline = await DisciplineService.GetDisciplineById(Id);
+        }
+        catch
+        {
+
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Discipline != null)
+        {
+            await DisciplineService.UpdateDiscipline(Discipline);
+        }
+    }
+}

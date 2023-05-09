@@ -1,0 +1,20 @@
+﻿@page "/creatediscipline"
+
+<h3>Create Discipline</h3>
+
+<EditForm Model="Discipline" OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+
+    <div class="input_width">
+        <div style="margin-bottom: 1rem;">
+            <label>Name</label>
+            <InputText @bind-Value="Discipline.Name" class="form-control"></InputText>
+            <ValidationMessage For="@(() => Discipline.Name)" />
+        </div>
+
+        <a href="disciplinelist"><button class="btn btn-primary">Go Back</button></a>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+    <br />
+</EditForm>

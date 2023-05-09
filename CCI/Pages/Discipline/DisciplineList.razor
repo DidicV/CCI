@@ -1,0 +1,38 @@
+﻿@page "/disciplinelist"
+<h3>Discipline List</h3>
+
+<br />
+<button class="btn btn-primary" @onclick="CreateDiscipline">Create new discipline</button>
+<br />
+<br />
+<RadzenDataGrid Data="@Disciplines"
+                TItem="Discipline"
+                AllowFiltering="true"
+                PageSize="6"
+                AllowPaging="true"
+                AllowSorting="true"
+                PagerHorizontalAlign="HorizontalAlign.Left">
+
+    <Columns>
+
+        <RadzenDataGridColumn TItem="Discipline" Title="Nr." Width="60px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="discipline">@(Disciplines.IndexOf(discipline) + 1).</Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Discipline" Property="Name" Title="Name"></RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn TItem="Discipline" Title="Update" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="discipline">
+                <button class="btn btn-primary" @onclick="(() => UpdateDiscipline(discipline.Id))"><i class="oi oi-pencil"></i></button>
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Discipline" Title="asdasd" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="discipline">
+                <button class="btn btn-danger" @onclick="(() => DeleteDiscipline(discipline))"><i class="oi oi-trash"></i></button>
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
