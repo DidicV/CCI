@@ -21,14 +21,13 @@
 
             <RadzenDataGridColumn TItem="Student" Property="Name" Title="Name"></RadzenDataGridColumn>
 
-
         <RadzenDataGridColumn TItem="Student" Title="Update" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
             <Template Context="student">
                 <button class="btn btn-primary" @onclick="(() => UpdateStudent(student.Id))"><i class="oi oi-pencil"></i></button>
                 </Template>
              </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="Student" Title="asdasd" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+        <RadzenDataGridColumn TItem="Student" Title="Delete" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
             <Template Context="student">
                 <button class="btn btn-danger" @onclick="(() => DeleteStudent(student))"><i class="oi oi-trash"></i></button>
                 </Template>

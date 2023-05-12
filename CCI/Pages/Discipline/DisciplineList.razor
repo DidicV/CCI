@@ -28,7 +28,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="Discipline" Title="asdasd" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+        <RadzenDataGridColumn TItem="Discipline" Title="Delete" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
             <Template Context="discipline">
                 <button class="btn btn-danger" @onclick="(() => DeleteDiscipline(discipline))"><i class="oi oi-trash"></i></button>
             </Template>

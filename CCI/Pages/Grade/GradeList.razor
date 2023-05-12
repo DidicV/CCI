@@ -1,0 +1,81 @@
+﻿@page "/gradelist"
+
+<h3>Grade List</h3>
+
+<RadzenDropDown TValue="Discipline" Data="@disciplines" TextProperty="Name" 
+    ValueProperty="Id" Change=@(args => OnChange(args)) />
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Grades</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in StudentsWithGrades)
+        {
+            <tr>
+                <td>@student.Name</td>
+                <td>
+                    <div class="row">
+                        @foreach (var grade in student.Grades)
+                        {
+                            <div class="col-1">@grade.Mark</div>
+                        }
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary" @onclick="() => SubmitGrade(student.Id)">Submit</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+
+    public class StudentWithGrades
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public List<Grade> Grades { get; set; } = new();
+    }
+
+    public List<Discipline> disciplines = new();
+    public List<Grade> grades = new();
+    public List<Student> students = new();
+    public List<StudentWithGrades> StudentsWithGrades = new();
+    public Guid DisciplineId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await StudentService.GetStudents();
+        disciplines = await DisciplineService.GetDisciplines();
+    }
+
+    private async void OnChange(object id)
+    {
+        grades = await GradeService.GetGradesByDisciplineId((Guid)id);
+
+        DisciplineId = (Guid)id;
+
+        StudentsWithGrades = students.Select(student => new StudentWithGrades
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Grades = grades.Where(grade => grade.StudentId == student.Id).ToList()
+            }).ToList();
+
+        StateHasChanged();
+    }
+
+    private void SubmitGrade(Guid StudentId)
+    {
+        NavigationManager.NavigateTo($"/studentgrades/{StudentId}/{DisciplineId}");
+    }
+}

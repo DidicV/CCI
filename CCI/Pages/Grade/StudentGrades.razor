@@ -1,0 +1,48 @@
+﻿@page "/studentgrades/{studentid:guid}/{disciplineid:guid}"
+
+<h3>Student Grades</h3>
+
+<h2>@Student.Name</h2>
+<h2>@Discipline.Name</h2>
+
+
+<EditForm Model="Grade" OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+
+    <div class="input_width">
+        <div style="margin-bottom: 1rem;">
+            <label>Name</label>
+            <RadzenNumeric Min="1" Max="10" @bind-Value=@Grade.Mark class="form-control" />
+            <ValidationMessage For="@(() => Grade.Mark)" />
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+    <br />
+</EditForm>
+
+<RadzenDataGrid Data="@Grades"
+                TItem="Grade"
+                AllowFiltering="true"
+                PageSize="10"
+                AllowPaging="true"
+                AllowSorting="true"
+                PagerHorizontalAlign="HorizontalAlign.Left">
+
+    <Columns>
+
+        <RadzenDataGridColumn TItem="Grade" Title="Nr." Width="60px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="grade">@(Grades.IndexOf(grade) + 1).</Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Grade" Property="Mark" Title="Name"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Grade" Title="Delete" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="grade">
+                <button class="btn btn-danger" @onclick="(() => DeleteGrade(grade))"><i class="oi oi-trash"></i></button>
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+
+</RadzenDataGrid>
