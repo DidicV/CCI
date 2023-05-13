@@ -18,6 +18,11 @@
             NavigationManager.NavigateTo($"updatestudent/{id}");
         }
 
+        public void GeneralStudentGrades(Guid id)
+        {
+            NavigationManager.NavigateTo($"radarstudent/{id}");
+        }
+
         public async void DeleteStudent(Model.Student student) 
         {
             await StudentService.DeleteStudent(student);
