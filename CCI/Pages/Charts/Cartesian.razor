@@ -1,0 +1,96 @@
+﻿@page "/cartesian"
+
+<h3>Cartesian</h3>
+
+<RadzenDropDown TValue="Discipline" Data="@disciplines" TextProperty="Name"
+                ValueProperty="Id" Change=@(args => FirstDiscipline(args)) />
+
+<RadzenDropDown TValue="Discipline" Data="@disciplines" TextProperty="Name"
+                ValueProperty="Id" Change=@(args => SecondDiscipline(args)) />
+
+<RadzenButton Text="Calculate" Click="@ButtonClick" />
+
+<br />
+<br />
+
+<center>
+    <div id="cartesian" style="height: 550px; border:1px solid double; box-shadow: 5px 10px 8px 5px #888888;"></div>
+</center>
+
+@code 
+{
+    public List<Discipline> disciplines = new();
+    public Guid FirstDisciplineId;
+    public Guid SecondDisciplineId;
+
+    public List<Student> Students { get; set; } = new();
+
+    public List<double> mediaX { get; set; } = new();
+    public List<double> mediaY { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        disciplines = await DisciplineService.GetDisciplines();
+    }
+
+    private void FirstDiscipline(object id)
+    {
+        FirstDisciplineId = (Guid)id;
+    }
+
+    private void SecondDiscipline(object id)
+    {
+        SecondDisciplineId = (Guid)id;
+    }
+
+    private async void ButtonClick(MouseEventArgs args)
+    {
+        if(FirstDisciplineId != SecondDisciplineId)
+        {
+            if (FirstDisciplineId != Guid.Empty && SecondDisciplineId != Guid.Empty)
+            {
+                Students.Clear();
+                mediaX.Clear();
+                mediaY.Clear();
+
+                Students = await StudentService.GetStudents();
+
+                foreach(var student in Students)
+                {
+                    var firstGrades = await GradeService.GetGradesByStudentIdandDisciplineId(student.Id, FirstDisciplineId);
+                    var secondGrades = await GradeService.GetGradesByStudentIdandDisciplineId(student.Id, SecondDisciplineId);
+
+                    var fisrtSum = firstGrades.Sum(g => g.Mark);
+
+                    if (firstGrades.Any())
+                    {
+                        var mean = (double)fisrtSum / firstGrades.Count;
+                        mediaX.Add(mean);
+                    }
+                    else
+                    {
+                        mediaX.Add(0);
+                    }
+
+                    var secondSum = secondGrades.Sum(g => g.Mark);
+
+                    if (secondGrades.Any())
+                    {
+                        var mean = (double)secondSum / secondGrades.Count;
+                        mediaY.Add(mean);
+                    }
+                    else
+                    {
+                        mediaY.Add(0);
+                    }
+                }
+
+                var courseX = disciplines.FirstOrDefault(d => d.Id == FirstDisciplineId);
+                var courseY = disciplines.FirstOrDefault(d => d.Id == FirstDisciplineId);
+
+                await JsRunTime.InvokeVoidAsync("GenerateCartesianChart", mediaX, mediaY, Students.Select(s => s.Name), courseX.Name, courseY.Name);
+            }
+        }
+        StateHasChanged();
+    }
+}
