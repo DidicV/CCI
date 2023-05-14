@@ -2,7 +2,7 @@
 
 <h3>Student Grades</h3>
 
-<h2>@Student.Name</h2>
+<h2>@(Student.Name)</h2>
 <h2>@Discipline.Name</h2>
 
 
@@ -37,6 +37,12 @@
 
         <RadzenDataGridColumn TItem="Grade" Property="Mark" Title="Name"></RadzenDataGridColumn>
 
+        <RadzenDataGridColumn TItem="Grade" Title="Update" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="grade">
+                <button class="btn btn-primary" @onclick="(() => UpdateGrade(grade.Id))"><i class="oi oi-pencil"></i></button>
+            </Template>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn TItem="Grade" Title="Delete" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
             <Template Context="grade">
                 <button class="btn btn-danger" @onclick="(() => DeleteGrade(grade))"><i class="oi oi-trash"></i></button>
@@ -46,3 +52,4 @@
     </Columns>
 
 </RadzenDataGrid>
+<br/>

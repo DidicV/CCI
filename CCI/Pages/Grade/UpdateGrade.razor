@@ -1,0 +1,60 @@
+﻿@page "/updategrade/{id:guid}"
+
+<h3>Update Grade</h3>
+
+
+@if (Grade != null)
+{
+
+    <EditForm Model="Grade" OnValidSubmit="HandleSubmit">
+
+        <DataAnnotationsValidator />
+
+        <div class="input_width">
+            <div style="margin-bottom: 1rem;">
+                <label>Grade</label>
+
+                <div style="display: flex;">
+                    <RadzenNumeric Min="1" Max="10" @bind-Value=@Grade.Mark class="form-control" />
+                </div>
+
+                <ValidationMessage For="@(() => Grade.Mark)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Go Back</button>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+        <br/>
+    </EditForm>
+}
+
+
+@code 
+{
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public Grade? Grade { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Grade = await GradeService.GetGradeById(Id);
+        }
+        catch
+        {
+            await JsRunTime.InvokeVoidAsync("history.go", -1);
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Grade != null)
+        {
+            await GradeService.UpdateGrade(Grade);
+            await JsRunTime.InvokeVoidAsync("history.go", -1);
+        }
+    }
+}

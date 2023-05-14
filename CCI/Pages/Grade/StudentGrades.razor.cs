@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-
 namespace CCI.Pages.Grade
 {
     public partial class StudentGrades
@@ -19,7 +18,7 @@ namespace CCI.Pages.Grade
 
         public Model.Grade Grade = new();
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnInitializedAsync()
         {
             Student = await StudentService.GetStudentById(StudentId);
             Discipline = await DisciplineService.GetDisciplineById(DisciplineId);
@@ -36,6 +35,11 @@ namespace CCI.Pages.Grade
             Grades = await GradeService.GetGradesByStudentIdandDisciplineId(StudentId, DisciplineId);
 
             Grade = new();
+        }
+
+        void UpdateGrade(Guid id)
+        {
+            NavigationManager.NavigateTo($"updategrade/{id}");
         }
 
         async Task DeleteGrade(Model.Grade grade)

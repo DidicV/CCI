@@ -30,9 +30,20 @@ namespace CCI.Services.Implementations
                                  .ToListAsync();
         }
 
+        public async Task<Grade?> GetGradeById(Guid id)
+        {
+            return await _context.Grades.FindAsync(id);
+        }
+
         public async Task CreateGrade(Grade grade)
         {
             await _context.Grades.AddAsync(grade);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateGrade(Grade grade)
+        {
+            _context.Update(grade);
             await _context.SaveChangesAsync();
         }
 
