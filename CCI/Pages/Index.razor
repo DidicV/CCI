@@ -1,17 +1,9 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
-
-<div id="chartdiv" style="width: 100%;height: 500px;"></div>
-
 @code
 {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender)
-        {
-            var numbers = new List<int>() { 7, 9, 10, 8, 8, 9};
-            //await JsRunTime.InvokeVoidAsync("GeneratePieChart", numbers);
-        }
+        NavigationManager.NavigateTo($"studentlist");
     }
 }

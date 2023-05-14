@@ -5,7 +5,6 @@
 <RadzenDropDown TValue="Discipline" Data="@disciplines" TextProperty="Name" 
     ValueProperty="Id" Change=@(args => OnChange(args)) />
 
-    <RadzenButton Text="Calculate" Click="@GoBack" />
 
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -78,10 +77,5 @@
     private void SubmitGrade(Guid StudentId)
     {
         NavigationManager.NavigateTo($"/studentgrades/{StudentId}/{DisciplineId}");
-    }
-
-    private void GoBack()
-    {
-        JsRunTime.InvokeVoidAsync("history.go", 1);
     }
 }
