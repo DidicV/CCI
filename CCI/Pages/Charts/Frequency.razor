@@ -1,0 +1,28 @@
+﻿@page "/frequency/{disciplineid:guid}"
+
+<h3>Frequency</h3>
+
+<br />
+<br />
+
+<center>
+    <div id="frequency" style="height: 550px; border:1px solid double; box-shadow: 5px 10px 8px 5px #888888;"></div>
+</center>
+
+
+@code 
+{
+    [Parameter]
+    public Guid DisciplineId { get; set; }
+
+    public List<Grade> Grades { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        base.OnParametersSet();
+
+        Grades = await GradeService.GetGradesByDisciplineId(DisciplineId);
+
+        await JsRunTime.InvokeVoidAsync("GenerateFrequencyChart", Grades.Select(g => g.Mark));
+    }
+}

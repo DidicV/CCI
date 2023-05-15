@@ -19,6 +19,11 @@
             NavigationManager.NavigateTo($"updatediscipline/{id}");
         }
 
+        public void GradeDisciplineFrequency(Guid id)
+        {
+            NavigationManager.NavigateTo($"frequency/{id}");
+        }
+
         public async void DeleteDiscipline(Model.Discipline discipline)
         {
             await DisciplineService.DeleteDiscipline(discipline);

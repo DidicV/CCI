@@ -21,6 +21,11 @@
 
         <RadzenDataGridColumn TItem="Discipline" Property="Name" Title="Name"></RadzenDataGridColumn>
 
+        <RadzenDataGridColumn TItem="Discipline" Title="Frequency" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
+            <Template Context="discipline">
+                <button class="btn btn-primary" @onclick="(() => GradeDisciplineFrequency(discipline.Id))"><i class="oi oi-bar-chart"></i></button>
+            </Template>
+        </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="Discipline" Title="Update" Width="100px" TextAlign="TextAlign.Center" Sortable="false">
             <Template Context="discipline">

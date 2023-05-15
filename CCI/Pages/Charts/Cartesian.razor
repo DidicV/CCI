@@ -86,7 +86,7 @@
                 }
 
                 var courseX = disciplines.FirstOrDefault(d => d.Id == FirstDisciplineId);
-                var courseY = disciplines.FirstOrDefault(d => d.Id == FirstDisciplineId);
+                var courseY = disciplines.FirstOrDefault(d => d.Id == SecondDisciplineId);
 
                 await JsRunTime.InvokeVoidAsync("GenerateCartesianChart", mediaX, mediaY, Students.Select(s => s.Name), courseX.Name, courseY.Name);
             }
