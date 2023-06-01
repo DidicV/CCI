@@ -1,0 +1,166 @@
+﻿@page "/dendogram"
+<h3>File Uploader</h3>
+
+<InputFile multiple OnChange="OnFileSelected" />
+
+@if (selectedFiles.Any())
+{
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>Word</th>
+                    @foreach (var file in selectedFiles)
+                    {
+                        <th>@file.Name</th>
+                    }
+                    <th>TF</th>
+                    <th>IDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var (index, word) in distinctWords.Select((word, index) => (index + 1, word)))
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@word</td>
+                        @foreach (var file in selectedFiles)
+                        {
+                            var frequency = file.WordFrequencies.ContainsKey(word)
+                            ? file.WordFrequencies[word]
+                            : 0;
+                            <td>@frequency</td>
+                        }
+                        <td>@CalculateTermFrequency(word)</td>
+                        <td>@CalculateInverseDocumentFrequency(word)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br/>
+
+    <h3>Sentence Distance</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Sentence</th>
+                @foreach (var file in selectedFiles)
+                {
+                    <th>@file.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var (i, file) in selectedFiles.Select((file, i) => (i, file)))
+            {
+                <tr>
+                    <td>@(i+1)</td>
+                    <td>@file.Content</td>
+                    @foreach (var (j, otherFile) in selectedFiles.Select((otherFile, j) => (j, otherFile)))
+                    {
+                        var distance = i == j ? 0 : CalculateSentenceDistance(file.Content, otherFile.Content);
+                        <td>@distance</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br/>
+}
+
+@code {
+    private List<UploadedFile> selectedFiles = new List<UploadedFile>();
+    private HashSet<string> distinctWords = new HashSet<string>();
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFiles.Clear();
+        distinctWords.Clear();
+
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var content = await ReadFileContent(file);
+            var words = GetWords(content);
+            var wordFrequencies = CountWordFrequencies(words);
+
+            selectedFiles.Add(new UploadedFile { Name = file.Name, Content = content, WordFrequencies = wordFrequencies });
+
+            foreach (var word in words)
+            {
+                distinctWords.Add(word);
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task<string> ReadFileContent(IBrowserFile file)
+    {
+        using (var reader = new StreamReader(file.OpenReadStream()))
+        {
+            return await reader.ReadToEndAsync();
+        }
+    }
+
+    private List<string> GetWords(string content)
+    {
+        // Split the content into words using a whitespace delimiter
+        return content.Split(new[] { ' ', '\t', '\n', '\r', '.', ',', ';', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(word => word.ToLower())
+            .ToList();
+    }
+
+    private Dictionary<string, int> CountWordFrequencies(List<string> words)
+    {
+        var wordFrequencies = new Dictionary<string, int>();
+
+        foreach (var word in words)
+        {
+            if (wordFrequencies.ContainsKey(word))
+            {
+                wordFrequencies[word]++;
+            }
+            else
+            {
+                wordFrequencies[word] = 1;
+            }
+        }
+
+        return wordFrequencies;
+    }
+
+    private decimal CalculateTermFrequency(string word)
+    {
+        var totalFrequency = selectedFiles.Sum(file => file.WordFrequencies.GetValueOrDefault(word, 0));
+        return (decimal)totalFrequency / selectedFiles.Count;
+    }
+
+    private decimal CalculateInverseDocumentFrequency(string word)
+    {
+        var documentFrequency = selectedFiles.Count(file => file.WordFrequencies.ContainsKey(word));
+        return (decimal)Math.Log((selectedFiles.Count + 1) / (double)(documentFrequency + 1)) + 1;
+    }
+
+
+    private double CalculateSentenceDistance(string sentence1, string sentence2)
+    {
+        var wordFrequencies1 = GetWordFrequencies(sentence1);
+        var wordFrequencies2 = GetWordFrequencies(sentence2);
+
+        var distinctWordsList = distinctWords.ToList();
+        var frequencyList1 = distinctWordsList.Select(word => wordFrequencies1.GetValueOrDefault(word, 0)).ToList();
+        var frequencyList2 = distinctWordsList.Select(word => wordFrequencies2.GetValueOrDefault(word, 0)).ToList();
+
+        var sumOfSquares = frequencyList1.Zip(frequencyList2, (f1, f2) => Math.Pow(f1 - f2, 2)).Sum();
+        return Math.Sqrt(sumOfSquares);
+    }
+
+    private Dictionary<string, int> GetWordFrequencies(string sentence)
+    {
+        var words = GetWords(sentence);
+        return CountWordFrequencies(words);
+    }
+}
