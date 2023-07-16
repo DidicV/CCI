@@ -26,30 +26,3 @@
         <br />
     </EditForm>
 }
-
-@code {
-    [Parameter]
-    public Guid Id { get; set; }
-
-    public Discipline? Discipline { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Discipline = await DisciplineService.GetDisciplineById(Id);
-        }
-        catch
-        {
-
-        }
-    }
-
-    async Task HandleSubmit()
-    {
-        if (Discipline != null)
-        {
-            await DisciplineService.UpdateDiscipline(Discipline);
-        }
-    }
-}
